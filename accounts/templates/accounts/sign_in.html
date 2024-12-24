@@ -1,0 +1,57 @@
+{% extends 'navbar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}Sign in{% endblock %}
+
+    {% load static %}
+    
+    <!-- Link to CSS file -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    
+    <style>
+        /* Styling for the alert message */
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none; /* Initially hidden */
+        }
+        .alert.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    {% block content %}
+
+    <div class="container">
+        <h1>Sign In</h1>
+        
+        <!-- Admin Alert Message (hidden by default) -->
+        <div id="admin-alert" class="alert">Admins cannot login through this interface. Please use the admin portal.</div>
+        
+        <form method="post" id="sign-in-form">
+            {% csrf_token %}
+            
+            <!-- Display form fields -->
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+    </div>
+
+    <!-- Link to JavaScript file -->
+    <script src="{% static 'js/script.js' %}"></script>
+    {% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8th Grade Notes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About Us</a>
+            <a href="{% url 'notes' %}">Notes</a>
+        </div>
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-btn">Log Out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'sign_in' %}" class="nav-btn">Log In</a>
+                <a href="{% url 'sign_up' %}" class="nav-btn">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>11th Physics Notes</h1>
+        <p>Here you can download additional resources for your Physics studies.</p>
+
+        <!-- Button to download a file -->
+        <a href="{% static 'files/abc.txt' %}" class="download-btn" download>
+            Download Physics Notes
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <!-- Left part of the navbar (Home, About, Contact) -->
+        <div class="nav-left">
+            <a href="{% url 'home' %}" onclick="saveCurrentPage()">Home</a>
+            <a href="{% url 'about' %}">About Us</a>
+            <a href="{% url 'notes' %}" id="notesButton" style="display: none;" onclick="navigateToNotes()">Notes</a>
+        </div>
+
+        <!-- Right part of the navbar (login/signup and logout button) -->
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-btn">Log Out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'sign_in' %}" class="nav-btn">Log In</a>
+                <a href="{% url 'sign_up' %}" class="nav-btn">Sign Up</a>
+            {% endif %}
+        </div>
+
+        <!-- Hamburger menu icon (only visible on small screens) -->
+        <div class="hamburger" onclick="toggleMenu()">
+            &#9776;
+        </div>
+    </nav>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- JavaScript for page navigation logic -->
+    <script>
+        // Toggle the navbar on small screens
+        function toggleMenu() {
+            const menu = document.querySelector('.nav-right');
+            menu.classList.toggle('active');
+        }
+
+        // Show/hide the Notes button based on user authentication status
+        document.addEventListener('DOMContentLoaded', function() {
+            const isAuthenticated = '{{ user.is_authenticated|yesno:"true,false" }}'; // Ensure it is a string
+            const notesButton = document.getElementById('notesButton');
+            console.log("isAuthenticated: ", isAuthenticated); // For debugging
+
+            // Check if the user is authenticated and toggle visibility of Notes button
+            if (isAuthenticated === 'true') {
+                notesButton.style.display = 'inline-block'; // Show Notes button
+                console.log("Notes button should now be visible.");
+            } else {
+                notesButton.style.display = 'none'; // Hide Notes button
+                console.log("Notes button should be hidden.");
+            }
+        });
+
+        // Save the current page URL for later navigation
+        function saveCurrentPage() {
+            sessionStorage.setItem('lastVisitedPage', window.location.href);
+        }
+
+        // Function to navigate back to the last visited page inside the Notes section
+        function navigateToNotes() {
+            const lastVisitedPage = sessionStorage.getItem('lastVisitedPage');
+            if (lastVisitedPage && lastVisitedPage.includes('/accounts/notes/')) {
+                window.location.href = lastVisitedPage;
+            } else {
+                window.location.href = '/accounts/notes/';
+            }
+        }
+    </script>
+</body>
+</html>
